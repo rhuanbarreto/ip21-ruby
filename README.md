@@ -20,11 +20,13 @@ gem 'ip21'
 And use the class in your code to execute queries:
 
 ```ruby
+require 'ip21' # If you are using Ruby. Don't need rrequire if you use Rails
+
 IP21.new(
     auth: {
-    account: 'john.doe',
-    domain: 'contoso.com',
-    password: 'set_your_own_password'
+        account: 'john.doe',
+        domain: 'contoso.com',
+        password: 'set_your_own_password'
     },
     sqlplus_address: '127.0.0.1',
     ip21_address: '127.0.0.1',
@@ -40,7 +42,7 @@ IP21.new(
 
 This gem uses Windows authentication to connect to SQLPlus, so don't forget to set your credentials correctly.
 
-On domain you can use the Netbios name (CONTOSO) or the normal domain name (contoso.com)
+On domain you can use the NETBIOS name (CONTOSO) or the normal domain name (contoso.com)
 
 # Changelog
 See the [commit page](https://github.com/rhuanbarreto/ip21-ruby/commits) for a list of changes.
