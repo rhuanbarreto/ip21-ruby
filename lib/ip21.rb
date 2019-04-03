@@ -74,7 +74,7 @@ class IP21
     request = Net::HTTP::Get.new(uri)
     request.ntlm_auth(@account, @domain, @password)
     response = http.request(request)
-    response.body
+    JSON.parse(response.body)
   end
 
   def soap_address
