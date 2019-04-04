@@ -69,9 +69,10 @@ class IP21
   def rest(sql, limit)
     require 'net/http'
     require 'ntlm/http'
-    uri = URI(rest_address(sql, limit))
+    uri = URI(rest_address)
     http = Net::HTTP.new(uri.host)
-    request = Net::HTTP::Get.new(uri)
+    request = Net::HTTP::Post.new(uri)
+    request.body = query_body(sql, limit)
     request.ntlm_auth(@account, @domain, @password)
     response = http.request(request)
     JSON.parse(response.body)
@@ -81,12 +82,14 @@ class IP21
     "http://#{@sqlplus_address}/SQLplusWebService/SQLplusWebService.asmx?WSDL"
   end
 
-  def rest_address(sql, limit)
-    query = '/ProcessData/AtProcessDataREST.dll/SQL?<SQL c="' \
-            "DRIVER={AspenTech SQLplus};HOST=#{@ip21_address};" \
-            'PORT=10014;CHARISNULL=Y;CHARINT=N;CHARFLOAT=N;CHARTIME=N;' \
-            'CONVERTERRORS=N;ROWID=Y;TIMEOUT=10"' \
-            " m=\"#{limit}\"><![CDATA[#{sql}]]></SQL>"
-    "http://#{@sqlplus_address}#{query}"
+  def rest_address
+    "http://#{@sqlplus_address}/ProcessData/AtProcessDataREST.dll/SQL"
+  end
+
+  def query_body(sql, limit)
+    "<SQL c=\"DRIVER={AspenTech SQLplus};HOST=#{@ip21_address};" \
+    'PORT=10014;CHARISNULL=Y;CHARINT=N;CHARFLOAT=N;CHARTIME=N;' \
+    "CONVERTERRORS=N;ROWID=Y;TIMEOUT=10\" m=\"#{limit}\">" \
+    "<![CDATA[#{sql}]]></SQL>"
   end
 end

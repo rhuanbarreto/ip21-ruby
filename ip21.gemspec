@@ -3,7 +3,7 @@ Gem::Specification.new do |s|
   s.summary     = 'Aspentech IP21 Adapter for Ruby'
   s.description = 'Aspentech IP21 Adapter for executing queries using SQLPlus' \
                   'WebService or REST API'
-  s.version     = '0.0.2'
+  s.version     = '0.0.3'
   s.date        = Time.now.strftime('%Y-%m-%d')
   s.author      = 'Rhuan Barreto'
   s.email       = 'rhuan@rhuan.com.br'
