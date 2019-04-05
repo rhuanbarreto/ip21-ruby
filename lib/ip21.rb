@@ -75,7 +75,18 @@ class IP21
     request.body = query_body(sql, limit)
     request.ntlm_auth(@account, @domain, @password)
     response = http.request(request)
-    JSON.parse(response.body)
+    parse_rest(response)
+  end
+
+  def parse_rest(response)
+    if response.code == '200'
+      JSON.parse(response.body)
+    else
+      {
+        status: response.code,
+        message: "Error on IP21: #{response.message}"
+      }
+    end
   end
 
   def soap_address
