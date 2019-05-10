@@ -80,6 +80,7 @@ class IP21
 
   def parse_rest(response)
     if response.code == '200'
+      require 'json'
       JSON.parse(response.body)
     else
       {

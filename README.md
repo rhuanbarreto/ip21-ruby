@@ -20,7 +20,7 @@ gem 'ip21'
 And use the class in your code to execute queries:
 
 ```ruby
-require 'ip21' # If you are using Ruby. Don't need rrequire if you use Rails
+require 'ip21' # If you are using Ruby. Don't need require if you use Rails
 
 IP21.new(
     auth: {
