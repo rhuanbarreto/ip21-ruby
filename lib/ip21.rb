@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Aspentech IP21 Adapter for executing queries using SQLPlus
 #
 # This library uses Windows Authentication for connecting to SQLPlus
@@ -25,6 +27,8 @@ class IP21
   #   the IP21 Database
   # @param [Boolean] soap Set this parameter to true for connecting to SQLPlus
   #   using the SOAP Web Service
+  # @param [Boolean] debug Set this parameter to true for enabling debug
+  #   information
   def initialize(
     auth: {
       account: 'john.doe',
@@ -33,7 +37,8 @@ class IP21
     },
     sqlplus_address: '127.0.0.1',
     ip21_address: '127.0.0.1',
-    soap: false
+    soap: false,
+    debug: false
   )
     @account = auth[:account]
     @domain = auth[:domain]
@@ -41,6 +46,7 @@ class IP21
     @sqlplus_address = sqlplus_address
     @ip21_address = ip21_address
     @soap = soap
+    @debug = debug
   end
 
   # Executes a direct query againt the database
@@ -49,8 +55,8 @@ class IP21
   # @param [Integer] limit The maximum number of rows that the query will output
   #
   # @return [Hash] Response from the query
-  def query(sql, limit = 100)
-    @soap ? soap(sql) : rest(sql, limit)
+  def query(sql, limit = 100, type = 'SQL')
+    @soap ? soap(sql) : rest(sql, limit, type)
   end
 
   private
@@ -66,16 +72,30 @@ class IP21
     client.call(:execute_sql, message: { command: sql }).body
   end
 
-  def rest(sql, limit)
+  def rest(sql, limit, type)
+    response = rest_request(
+      rest_address(type), query_body(sql, limit, type)
+    )
+    parse_rest(response)
+  end
+
+  def rest_request(url, body)
     require 'net/http'
     require 'ntlm/http'
-    uri = URI(rest_address)
+    uri = URI(url)
     http = Net::HTTP.new(uri.host)
     request = Net::HTTP::Post.new(uri)
-    request.body = query_body(sql, limit)
+    request.body = body
     request.ntlm_auth(@account, @domain, @password)
     response = http.request(request)
-    parse_rest(response)
+    debug_info(url, request.body, response) if @debug
+    response
+  end
+
+  def debug_info(address, body, response)
+    puts "Request: #{address}"
+    puts "Body: #{body}"
+    puts "Response: #{response.body}"
   end
 
   def parse_rest(response)
@@ -94,14 +114,24 @@ class IP21
     "http://#{@sqlplus_address}/SQLplusWebService/SQLplusWebService.asmx?WSDL"
   end
 
-  def rest_address
-    "http://#{@sqlplus_address}/ProcessData/AtProcessDataREST.dll/SQL"
+  def rest_address(type)
+    "http://#{@sqlplus_address}/ProcessData/AtProcessDataREST.dll/#{type}"
   end
 
-  def query_body(sql, limit)
-    "<SQL c=\"DRIVER={AspenTech SQLplus};HOST=#{@ip21_address};" \
-    'PORT=10014;CHARISNULL=Y;CHARINT=N;CHARFLOAT=N;CHARTIME=N;' \
-    "CONVERTERRORS=N;ROWID=Y;TIMEOUT=10\" m=\"#{limit}\">" \
-    "<![CDATA[#{sql}]]></SQL>"
+  def query_body(sql, limit, type)
+    case type
+    when 'SQL'
+      "<SQL c=\"DRIVER={AspenTech SQLplus};HOST=#{@ip21_address};Port=10014;" \
+      "CHARINT=N;CHARFLOAT=N;CHARTIME=N;CONVERTERRORS=N;\" m=\"#{limit}\" " \
+      "to=\"30\" s=\"#{select?(sql) ? 1 : 0}\"><![CDATA[#{sql}]]></SQL>"
+    when 'KPI'
+      require 'active_support'
+      require 'active_support/core_ext/object/to_query'
+      sql.to_query
+    end
+  end
+
+  def select?(query)
+    /^select/i.match?(query)
   end
 end
