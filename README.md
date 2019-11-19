@@ -1,5 +1,7 @@
 # Aspentech IP21 Ruby Gem
 
+[![Gem Version](https://badge.fury.io/rb/ip21@2x.png)](https://badge.fury.io/rb/ip21)
+
 With this gem you will be able to connect to IP21 and execute queries against the database using SQL statements.
 
 ## Installing
