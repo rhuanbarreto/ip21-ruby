@@ -2,7 +2,9 @@
 
 [![Gem Version](https://badge.fury.io/rb/ip21@2x.png)](https://badge.fury.io/rb/ip21)
 
-With this gem you will be able to connect to IP21 and execute queries against the database using SQL statements.
+With this gem you will be able to connect to IP21 and execute queries against the database using SQL statements or fetching from history or KPI table definitions.
+
+Full documentation on https://rubydoc.info/gems/ip21
 
 ## Installing
 
@@ -38,11 +40,11 @@ IP21.new(
 ## Prerequisites
 
 - IP21 Database
-- SQLPlus with REST or SOAP Web Service installed
+- SQLPlus with REST installed
 
 ## Authentication
 
-This gem uses Windows authentication to connect to SQLPlus, so don't forget to set your credentials correctly.
+This gem uses Windows authentication (NTLM) to connect to SQLPlus, so don't forget to set your credentials correctly.
 
 On domain you can use the NETBIOS name (CONTOSO) or the normal domain name (contoso.com)
 
