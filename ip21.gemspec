@@ -4,8 +4,8 @@ Gem::Specification.new do |s|
   s.name = 'ip21'
   s.summary     = 'Aspentech IP21 Adapter for Ruby'
   s.description = 'Aspentech IP21 Adapter for executing queries using SQLPlus' \
-                  'WebService or REST API'
-  s.version     = '1.0.0'
+                  ' REST API'
+  s.version     = '1.0.1'
   s.date        = Time.now.strftime('%Y-%m-%d')
   s.author      = 'Rhuan Barreto'
   s.email       = 'rhuan@rhuan.com.br'

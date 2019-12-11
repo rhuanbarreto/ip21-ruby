@@ -90,13 +90,14 @@ class IP21
   #   - 20 - Suspect Only
   #   - 21 - First
   #   - 22 - Last
-  # @option opts [Integer] outsiders Whether or not to include outsiders
+  # @option opts [Integer] outsiders Whether or not to include the closest
+  #   values outside the date/time range
   #   - 0 - False
   #   - 1 - True
   #
   # @return [Hash] Response from IP21
   def history(tag, start_time, end_time, opts = {
-    limit: 1000, outsiders: 1, history_format: 0, retrieval_type: 0
+    limit: 1000, outsiders: 0, history_format: 0, retrieval_type: 0
   })
     parse_rest(
       rest_request(
@@ -183,7 +184,11 @@ class IP21
   end
 
   def history_query_body(tag, start_time, end_time, opts)
-    '<Q f="D" allQuotes="1"><Tag>' + "<N><![CDATA[#{tag}]]></N>" \
+    opts[:limit] ||= 1000
+    opts[:outsiders] ||= 0
+    opts[:history_format] ||= 0
+    opts[:retrieval_type] ||= 0
+    '<Q appId="20" f="D" allQuotes="1"><Tag>' + "<N><![CDATA[#{tag}]]></N>" \
       "<D><![CDATA[#{@ip21_address}]]></D>" + "<HF>#{opts[:history_format]}</HF>" \
       "<St>#{start_time}</St>" + "<Et>#{end_time}</Et>" \
       "<RT>#{opts[:retrieval_type]}</RT>" + "<X>#{opts[:limit]}</X>" \
