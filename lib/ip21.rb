@@ -45,7 +45,7 @@ class IP21
     @debug = debug
   end
 
-  # Executes a direct query againt the database
+  # Executes a direct query against the database
   #
   # @param [String] sql The query to be executed
   # @param [Integer] limit The maximum number of rows that the query will output
@@ -73,26 +73,26 @@ class IP21
   #   - 1: Record as String
   # @option opts [Integer] retrieval_type The retrieval type of the query.
   #   Possible values are:
-  #   0 - Actual
-  #   1 - Interpolated
-  #   2 - Best Fit
-  #   3 - Manual
-  #   10 - Not Good
-  #   11 - Good
-  #   12 - Average
-  #   13 - Maximum
-  #   14 - Minimum
-  #   15 - Range
-  #   16 - Sum
-  #   17 - Standard Deviation
-  #   18 - Variance
-  #   19 - Good Only
-  #   20 - Suspect Only
-  #   21 - First
-  #   22 - Last
+  #   - 0 - Actual
+  #   - 1 - Interpolated
+  #   - 2 - Best Fit
+  #   - 3 - Manual
+  #   - 10 - Not Good
+  #   - 11 - Good
+  #   - 12 - Average
+  #   - 13 - Maximum
+  #   - 14 - Minimum
+  #   - 15 - Range
+  #   - 16 - Sum
+  #   - 17 - Standard Deviation
+  #   - 18 - Variance
+  #   - 19 - Good Only
+  #   - 20 - Suspect Only
+  #   - 21 - First
+  #   - 22 - Last
   # @option opts [Integer] outsiders Whether or not to include outsiders
-  #   0 - False
-  #   1 - True
+  #   - 0 - False
+  #   - 1 - True
   #
   # @return [Hash] Response from IP21
   def history(tag, start_time, end_time, opts = {
@@ -112,6 +112,10 @@ class IP21
 
   private
 
+  # Execute the request
+  #
+  # @param [String] type The request type to be passed to rest_address function
+  # @param [String] body The request body
   def rest_request(type, body)
     require 'net/http'
     require 'ntlm/http'
@@ -125,12 +129,22 @@ class IP21
     response
   end
 
+  # Generates request debug info
+  #
+  # @param [String] address The request address
+  # @param [String] body The request body
+  # @param [String] response The request response
   def debug_info(address, body, response)
     puts "Request: #{address}"
     puts "Body: #{body}"
     puts "Response: #{response.body}"
   end
 
+  # Parse the API response displaying errors if needed
+  #
+  # @param [Object] response The request response
+  #
+  # @return [Hash] Response or error from the API
   def parse_rest(response)
     if response.code == '200'
       require 'json'
@@ -143,6 +157,11 @@ class IP21
     end
   end
 
+  # Generate the URL for accessing IP21 based on type
+  #
+  # @param [String] type The type of the request.
+  #
+  # @return [String] Address to access request
   def rest_address(type)
     "http://#{@sqlplus_address}/ProcessData/AtProcessDataREST.dll/#{type}"
   end
