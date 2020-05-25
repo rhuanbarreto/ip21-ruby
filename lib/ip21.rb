@@ -183,16 +183,30 @@ class IP21
     }.to_query
   end
 
-  def history_query_body(tag, start_time, end_time, opts)
+  def history_query_body(tags, start_time, end_time, opts)
     opts[:limit] ||= 1000
     opts[:outsiders] ||= 0
     opts[:history_format] ||= 0
     opts[:retrieval_type] ||= 0
-    '<Q appId="20" f="D" allQuotes="1"><Tag>' + "<N><![CDATA[#{tag}]]></N>" \
-      "<D><![CDATA[#{@ip21_address}]]></D>" + "<HF>#{opts[:history_format]}</HF>" \
-      "<St>#{start_time}</St>" + "<Et>#{end_time}</Et>" \
-      "<RT>#{opts[:retrieval_type]}</RT>" + "<X>#{opts[:limit]}</X>" \
-      "<O>#{opts[:outsiders]}</O>" + '</Tag></Q>'
+    body = if tags.is_a?(String)
+             tag_request(tags, start_time, end_time, opts)
+           else
+             tags.map { |tag| tag_request(tag, start_time, end_time, opts) }.join
+           end
+    '<Q appId="20" f="D" allQuotes="1">' + body + '</Q>'
+  end
+
+  def tag_request(tag, start_time, end_time, opts)
+    '<Tag>' \
+      "<N><![CDATA[#{tag}]]></N>" \
+      "<D><![CDATA[#{@ip21_address}]]></D>" \
+      "<HF>#{opts[:history_format]}</HF>" \
+      "<St>#{start_time}</St>" \
+      "<Et>#{end_time}</Et>" \
+      "<RT>#{opts[:retrieval_type]}</RT>" \
+      "<X>#{opts[:limit]}</X>" \
+      "<O>#{opts[:outsiders]}</O>" \
+    '</Tag>'
   end
 
   def select?(query)
