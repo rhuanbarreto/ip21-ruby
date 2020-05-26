@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.homepage    = 'http://rubygems.org/gems/ip21'
   s.platform    = Gem::Platform::RUBY
   s.license     = 'MIT'
-  s.add_dependency 'activesupport', '~>6.0.1'
+  s.add_dependency 'activesupport', '>= 6.0.3.1'
   s.add_dependency 'ruby-ntlm', '~>0.0.4'
   s.files = Dir.glob('{docs,bin,lib,spec,templates,benchmarks}/**/*') +
             ['LICENSE', 'README.md', '.yardopts', __FILE__]
