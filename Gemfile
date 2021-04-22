@@ -5,5 +5,5 @@ source 'https://rubygems.org'
 git_source(:github) { |repo_name| "https://github.com/#{repo_name}" }
 
 gem 'activesupport', '~> 6.1.0'
-gem 'ruby-ntlm', '~>0.0.4'
-gem "httpi", "~> 2.4"
+gem 'rubyntlm', '~> 0.6.3'
+gem "httpi", '~> 2.4'
