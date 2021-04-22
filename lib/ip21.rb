@@ -118,15 +118,13 @@ class IP21
   # @param [String] type The request type to be passed to rest_address function
   # @param [String] body The request body
   def rest_request(type, body)
-    require 'net/http'
-    require 'ntlm/http'
-    uri = URI(rest_address(type))
-    http = Net::HTTP.new(uri.host)
-    request = Net::HTTP::Post.new(uri)
+    require 'httpi'
+    HTTPI.log = @debug
+    request = HTTPI::Request.new(rest_address(type))
     request.body = body
-    request.ntlm_auth(@account, @domain, @password)
-    response = http.request(request)
-    debug_info(uri, request.body, response) if @debug
+    request.auth.ntlm(@account, @password, @domain)
+    response = HTTPI.post(request)
+    debug_info(request.url, request.body, response) if @debug
     response
   end
 
@@ -147,13 +145,13 @@ class IP21
   #
   # @return [Hash] Response or error from the API
   def parse_rest(response)
-    if response.code == '200'
+    if response.code == 200
       require 'json'
       JSON.parse(response.body)
     else
       {
         status: response.code,
-        message: "Error on IP21: #{response.message}"
+        message: "Error on IP21: #{response.body}"
       }
     end
   end
