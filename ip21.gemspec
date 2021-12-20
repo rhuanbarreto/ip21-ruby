@@ -14,7 +14,7 @@ Gem::Specification.new do |s|
   s.license     = 'MIT'
   s.add_dependency 'activesupport', '~> 6.1.0'
   s.add_dependency 'rubyntlm', '~>0.6.3'
-  s.add_dependency 'httpi', '~>2.4'
+  s.add_dependency 'httpi', '>=2.4', '<4.0'
   s.files = Dir.glob('{docs,bin,lib,spec,templates,benchmarks}/**/*') +
             ['LICENSE', 'README.md', '.yardopts', __FILE__]
   s.require_path = 'lib'
