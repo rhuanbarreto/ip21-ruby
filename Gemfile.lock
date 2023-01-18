@@ -14,7 +14,7 @@ GEM
     i18n (1.8.10)
       concurrent-ruby (~> 1.0)
     minitest (5.14.4)
-    rack (2.2.3)
+    rack (3.0.4.1)
     rubyntlm (0.6.3)
     socksify (1.7.1)
     tzinfo (2.0.4)
