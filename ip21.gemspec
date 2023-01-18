@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.homepage    = 'http://rubygems.org/gems/ip21'
   s.platform    = Gem::Platform::RUBY
   s.license     = 'MIT'
-  s.add_dependency 'activesupport', '~> 6.1.0'
+  s.add_dependency 'activesupport', '>= 6.1', '< 7.1'
   s.add_dependency 'rubyntlm', '~>0.6.3'
   s.add_dependency 'httpi', '~>2.4'
   s.files = Dir.glob('{docs,bin,lib,spec,templates,benchmarks}/**/*') +
